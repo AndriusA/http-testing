@@ -1,0 +1,5 @@
+no dummynet quick on lo0 all
+dummynet in quick inet all allow-opts pipe 1
+dummynet in quick inet6 all allow-opts pipe 1
+dummynet out quick inet all allow-opts pipe 2
+dummynet out quick inet6 all allow-opts pipe 2
