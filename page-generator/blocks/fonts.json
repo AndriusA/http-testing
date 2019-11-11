@@ -1,0 +1,66 @@
+[
+    {
+        "font_css": "fonts/roboto_condensed.css",
+        "font_family": "'Roboto Condensed', sans-serif;"
+    },
+    {
+        "font_css": "fonts/source_sans_pro.css",
+        "font_family": "'Source Sans Pro', sans-serif;"
+    },
+    {
+        "font_css": "fonts/oswald.css",
+        "font_family": "'Oswald', sans-serif;"
+    },
+    {
+        "font_css": "fonts/raleway.css",
+        "font_family": "'Raleway', sans-serif;"
+    },
+    {
+        "font_css": "fonts/roboto.css",
+        "font_family": "'Roboto', sans-serif;"
+    },
+    {
+        "font_css": "fonts/opensans.css",
+        "font_family": "'Open Sans', sans-serif;"
+    },
+    {
+        "font_css": "fonts/lato.css",
+        "font_family": "'Lato', sans-serif;"
+    },
+    {
+        "font_css": "fonts/montserrat.css",
+        "font_family": "'Montserrat', sans-serif;"
+    },
+    {
+        "font_css": "fonts/roboto_mono.css",
+        "font_family": "'Roboto Mono', monospace;"
+    },
+    {
+        "font_css": "fonts/roboto_slab.css",
+        "font_family": "'Roboto Slab', serif;"
+    },
+    {
+        "font_css": "fonts/poppins.css",
+        "font_family": "'Poppins', sans-serif;"
+    },
+    {
+        "font_css": "fonts/merriweather.css",
+        "font_family": "'Merriweather', serif;"
+    },
+    {
+        "font_css": "fonts/noto_sans.css",
+        "font_family": "'Noto Sans', sans-serif;"
+    },
+    {
+        "font_css": "fonts/pt_sans.css",
+        "font_family": "'PT Sans', sans-serif;"
+    },
+    {
+        "font_css": "fonts/ubuntu.css",
+        "font_family": "'Ubuntu', sans-serif;"
+    },
+    {
+        "font_css": "fonts/playfair_display.css",
+        "font_family": "'Playfair Display', serif;"
+    }
+]
