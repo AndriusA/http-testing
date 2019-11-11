@@ -30,3 +30,19 @@ Desktop:
 - font reqs: 4.0 (p10: 1.0, p90: 10.0)
 - js bytes: 412.59KB (p10: 96.2KB, p90: 1180.64KB)
 - js reqs: 20.0 (p10: 5.0, p90: 54.0)
+
+
+Popular JS libraries and frameworks from [the Web Alamanac](https://almanac.httparchive.org/en/2019/javascript#open-source-libraries-and-frameworks).
+
+Popular fonts from [Google Fonts](https://fonts.google.com).
+
+Popular scripts from HTTPArchive, extracted directly from the full dataset (counts full URLs, so would generally count libraries included from reused third-party sources as popular only):
+
+```SQL
+SELECT url, count(distinct(pageid)) as popularity
+FROM `httparchive.summary_requests.2019_10_01_mobile`
+WHERE `type`='script'
+GROUP BY url
+ORDER BY popularity DESC
+```
+

@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "handlebars": "^4.5.1",
-    "jimp": "^0.8.5"
+    "jimp": "^0.8.5",
+    "lorem-ipsum": "^2.0.3"
   }
 }

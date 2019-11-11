@@ -48,31 +48,37 @@
 	img.respond {width: 99%;}
     </style>
     <script>
-	    function imageLoadTime() {
+	    function loadTime() {
 	        var lapsed = navSupport ? window.performance.now() : Date.now() - pageStart;
-			document.getElementById("imgTiming").innerHTML = ((lapsed) / 1000).toFixed(2)
+			document.getElementById("loadTiming").innerHTML = ((lapsed) / 1000).toFixed(2)
 	    }
         var pageStart = Date.now();
 		var navSupport = !(!('performance' in window) || !('timing' in window.performance) || !('navigation' in window.performance));
+        window.addEventListener('load', (event) => {
+            loadTime()
+        });
     </script>
+    {{#each text}}
+    <link href="{{this.font.font_css}}" rel="stylesheet">
+    {{/each}}
+    
+    {{#each scripts}}
+    <script src="{{this}}" {{#if ../deferjs}}defer{{/if}} ></script>
+    {{/each}}
 </head>
 
 <body>
 <div class="frame-container">
 
-	<div id="IMGLoad"><div>Load time: <strong class="highlight"><span id="imgTiming">0</span>s</strong></div></div>
+	<div id="Load"><div>Load time: <strong class="highlight"><span id="loadTiming">0</span>s</strong></div></div>
 
-	<div class="img-wrap">
-        <div class="img-interior">
-        	{{#each images}}
-        	<div class="row">
-        		{{#each this}}
-  				<img height="{{this.height}}" width="{{this.width}}" onload='imageLoadTime()' src='{{this.src}}'/>
-  				{{/each}}
-  			</div>
-			{{/each}}
+    {{#each text}}
+        <div class="row">
+            <p style="font-family: {{{this.font.font_family}}}">
+                {{this.text}}
+            </p>
         </div>
-    </div>
+    {{/each}}
 
 </div>
 </body>
