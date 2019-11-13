@@ -11,7 +11,7 @@ chrome_flags=""
 if [[ $http == "http1" ]]; then
     chrome_flags="--disable-http2"
 elif [[ $http == "http3" ]]; then
-	chrome_flags="--quic-version=h3-23 --enable-quic"
+	chrome_flags="--quic-version=h3-24 --enable-quic"
 fi
 
 args=(
@@ -30,8 +30,6 @@ throttle_stop () {
 	sudo pfctl -f /etc/pf.conf > /dev/null 2>&1
 	sudo pfctl -q -E > /dev/null 2>&1
 	sudo pfctl -q -d
-	# sudo pfctl -X $1
-	# sudo pfctl -q -Td -f ${pfctl_path}
 }
 
 throttle_start () {
@@ -50,11 +48,20 @@ throttle_start () {
 	sudo pfctl -E > /dev/null 2>&1
 }
 
+# packetspre=$(sudo netstat -s -p tcp | grep "packets sent" | awk 'NR==1{print $1}')
+# retranspre=$(sudo netstat -s -p tcp | grep "retransmitted" | awk 'NR==1{print $1}')
+
 echo "Throttling network connection..."
-throttle_start 4048Kbit/s 512Kbit/s 20ms 0
+throttle_start 4048Kbit/s 512Kbit/s 20ms 0.1   
 
 echo "Measuring..."
 lighthouse "${args[@]}" --chrome-flags="$chrome_flags"
 
-echo "Restoring network connection...oas"
-throttle_stop $throttle_token
+echo "Restoring network connection..."
+throttle_stop
+
+# packetspost=$(sudo netstat -s -p tcp -f inet | grep "packets sent" | awk 'NR==1{print $1}')
+# retranspost=$(sudo netstat -s -p tcp -f inet | grep "retransmitted" | awk 'NR==1{print $1}')
+
+# echo "retransmit rate ($retranspost - $retranspre)/($packetspost - $packetspre)"
+# bc <<< "scale=4; ($retranspost - $retranspre)/($packetspost - $packetspre)"

@@ -14,33 +14,35 @@ const jsLibs = fs.readdirSync("blocks/jslibs/", encoding='UTF-8');
  * @param hSplit - how many splits horizontally
  * @param name - filename prefix to write resulting image slices to
  */
-function sliceImage(filename, newWidth, vSplits, hSplits, path, name) {
+function sliceImage(filename, newWidth, hSplits, vSplits, path, name) {
     return Jimp.read(filename).then(image => {
         if (typeof newWidth !== 'undefined') {
             image.resize(newWidth, Jimp.AUTO);
         }
         let w = image.bitmap.width;
         let h = image.bitmap.height;
-        let sliceWidth = Math.ceil(w / vSplits);
-        let sliceHeight = Math.ceil(h / hSplits);
-        let slack = 0.001;
+        let sliceWidth = Math.floor(w / vSplits);
+        let sliceHeight = Math.floor(h / hSplits);
+
+        // console.log(`From image ${w}x${h} getting slices ${sliceWidth}x${sliceHeight}`)
 
         let slices = [];
 
-        function doSlice(image, vnum, hnum) {
+        function doSlice(image, hnum, vnum) {
             let slice = image.clone()
-            let x = hnum*sliceWidth;
-            let y = vnum*sliceHeight;
+            let x = vnum*sliceWidth;
+            let y = hnum*sliceHeight;
             let width = Math.min(sliceWidth, w - x);
             let height = Math.min(sliceHeight, h - y);
+            // console.log(`Slicing out ${width}x${height} at ${x}x${y}`)
             // console.log(`cropping at ${x}, ${y} width ${width}, height ${height}`)
             slice.crop(x, y, width, height);
             return {slice, width, height}
         }
 
-        for (let i = 0; i < vSplits; i++) {
+        for (let i = 0; i < hSplits; i++) {
             let rowSlices = [];
-            for (let j = 0; j < hSplits; j++) {
+            for (let j = 0; j < vSplits; j++) {
                 let slice = doSlice(image, i, j);
                 let src = `${name}/image-${i}-${j}.${image.getExtension()}`;
                 slice.slice.write(`${path}/${src}`);
@@ -117,6 +119,7 @@ async function generate(config) {
 
     let scripts = [];
     if (config.jsLibs || config.jsScripts) {
+        console.log(config);
         // Handle scripts
         scripts = jsLibs.slice(0, config.jsLibs).map(lib => config.jsLibsPath + "/" + lib)
             .concat(jsScripts.slice(0, config.jsScripts).map(lib => config.jsScriptsPath + "/" + lib));
@@ -169,30 +172,43 @@ async function generate(config) {
         deferjs: config.deferJs,
         ...imagesData
     };
+    
+    let source = fs.readFileSync('blocks/template.html', 'utf-8');
 
-    
-    fs.readFile('blocks/template.html', 'utf-8', function(error, source){
-      var template = handlebars.compile(source);
-      var html = template(data);
-      fs.writeFileSync(`${config.outputPath}/index.html`, html);
-    });
-    
+    var template = handlebars.compile(source);
+    var html = template(data);
+    fs.writeFileSync(`${config.outputPath}/index.html`, html);    
 }
 
-let config = {
-    outputPath: "demo",
-    image: "blocks/brave-hero.png",
-    imageWidth: 4600,
-    imageSplitsHorizontal: 10,
-    imageSplitsVertical: 10,
-    imagePath: "images",
-    fontsPath: "fonts",
-    fonts: 16,
-    jsLibsPath: "jslibs",
-    jsLibs: 25,
-    jsScriptsPath: "scripts",
-    jsScripts: 100,
-    deferJs: false
-}
+const {configurations} = require('./configurations.js');
 
-generate(config);
+const outputPrefix = "../testpages"
+// let config = {
+//     outputPath: "demo",
+//     image: "blocks/brave-hero.png",
+//     imageWidth: 4600,
+//     imageSplitsHorizontal: 10,
+//     imageSplitsVertical: 10,
+//     imagePath: "images",
+//     // fontsPath: "fonts",
+//     // fonts: 5,
+//     // jsLibsPath: "jslibs",
+//     // jsLibs: 0,
+//     // jsScriptsPath: "scripts",
+//     // jsScripts: 0,
+//     // deferJs: false
+// }
+
+configurations.map(async config => {
+    config.outputPath = outputPrefix + "/" + config.outputPath;
+    await generate(config);
+});
+
+let source = fs.readFileSync('blocks/pagelist-template.html', 'utf-8');
+var template = handlebars.compile(source);
+var html = template({
+    configurations: configurations
+});
+fs.writeFileSync(`${outputPrefix}/index.html`, html);
+
+
