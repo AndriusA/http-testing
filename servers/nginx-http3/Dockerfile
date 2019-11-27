@@ -3,7 +3,7 @@ FROM debian:buster-slim
 # Versions
 ENV PATCH_NGINX_VERSION=1.16
 ENV NGINX_VERSION=${PATCH_NGINX_VERSION}.1 \
-    QUICHE_REVISION=abf3f50a589bd827f3301eed727d875de6022e53
+    QUICHE_REVISION=e45883da9c9d293bfe1d0d8fcd2280d95022b658
 
 RUN apt update && \
     # Install requirements
